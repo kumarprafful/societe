@@ -1,0 +1,20 @@
+{% block body %}
+<h1>DASHBOARD</h1>
+
+  {% if societies %}
+    {% for society in societies %}
+      <p>{{society.society_name}}</p>
+      <p>{{society.president}}</p>
+      <address class="">
+        {{society.address}}
+      </address>
+      <a href="{% url 'record:add-member' id=society.id %}">Add member</a>
+
+
+    {% endfor %}
+
+  {% else %}
+    <h1>No Society registered</h1>
+  {% endif %}
+
+{% endblock %}

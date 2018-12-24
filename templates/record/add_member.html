@@ -1,0 +1,9 @@
+{% block body %}
+<form class=""  method="post">
+  {% csrf_token %}
+  {{member_form.as_p}}
+  <input type="submit" name="submit">
+
+</form>
+
+{% endblock %}
