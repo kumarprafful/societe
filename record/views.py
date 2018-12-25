@@ -32,10 +32,38 @@ def addMemberView(request, id):
             member = member_form.save(commit=False)
             member.society = society
             member.fill_month()
-            print(member_form)
             member.save()
 
-            # MonthlyRecord.objects.create(member=member)
+            first_record = MonthlyRecord()
+            MonthlyRecord.objects.create(member=member,
+                                                    year=first_record.fill_year(),
+                                                    month=first_record.fill_month(),
+                                                    previous_share=member.starting_share,
+                                                    previous_loan=member.starting_loan,
+                                                    share=first_record.fill_share(),
+                                                    total_share=first_record.fill_total_share(member.starting_share, 200),
+                                                    installment=first_record.fill_installment(5000),
+                                                    balance_loan=first_record.fill_balance_loan(member.starting_loan, 5000),
+                                                    interest=first_record.fill_interest(member.starting_loan),
+                                                    # total_amount=first_record.fill_total_amount,
+                                            )
+
+            # first_record.year = first_record.fill_year
+            # first_record.previous_share = member.starting_share
+            # first_record.previous_loan = member.starting_loan
+            # first_record.share = first_record.fill_share
+            # first_record.total_share = first_record.fill_total_share
+            # first_record.installment = first_record.fill_installment
+            # first_record.balance_loan = first_record.fill_balance_loan
+            # first_record.interest = first_record.fill_interest
+            # first_record.total_amount = first_record.fill_total_amount
+            #
+            #
+            #
+            # print(first_record.interest)
+            # first_record.save()
+
+
         return HttpResponseRedirect(reverse('record:dashboard'))
     else:
         member_form = MemberForm()

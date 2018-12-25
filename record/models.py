@@ -35,27 +35,56 @@ class Member(models.Model):
 class MonthlyRecord(models.Model):
     member = models.ForeignKey(Member, related_name='members', on_delete=models.CASCADE)
     date = models.DateTimeField(default=datetime.now)
-    month = models.CharField(max_length=20)
-    year = models.IntegerField()
-    previous_share = models.IntegerField()
-    previous_loan = models.IntegerField()
-    share = models.IntegerField()
-    total_share = models.IntegerField()
-    installment = models.IntegerField()
-    balance_loan = models.IntegerField()
-    interest = models.IntegerField()
-    late_fees = models.IntegerField(default=0)
-    total_amount = models.IntegerField()
+    month = models.CharField(max_length=20, blank=True, null=True, default="jan")
+    year = models.IntegerField(blank=True, null=True)
+    previous_share = models.IntegerField(blank=True, null=True)
+    previous_loan = models.IntegerField(blank=True, null=True)
+    share = models.IntegerField(blank=True, null=True)
+    total_share = models.IntegerField(blank=True, null=True)
+    installment = models.IntegerField(blank=True, null=True)
+    balance_loan = models.IntegerField(blank=True, null=True)
+    interest = models.IntegerField(blank=True, null=True)
+    late_fees = models.IntegerField(default=0, blank=True, null=True)
+    total_amount = models.IntegerField(blank=True, null=True, default=10)
     remarks = models.CharField(max_length=30, blank=True, null=True)
 
-    def month_year(self):
-        cur_date = self.date.date
-        cur_month = cur_date.month
-        cur_year = cur_date.year
-        return cur_month, cur_year
+
+    def fill_month(self):
+        cur_date = self.date
+        month = cur_date.month
+        return month
+        # print(cur_month, cur_year)
+
+    def fill_year(self):
+        cur_date = self.date
+        print(cur_date.month, " THERE ")
+        year = cur_date.year
+        return year
+
+
+    def fill_share(self):
+        share = 200
+        return share
+
+    def fill_total_share(self, previous_share, share):
+        total_share = previous_share + share
+        return total_share
+
+    def fill_installment(self, installment):
+        # installment = 5000
+        return installment
+
+    def fill_balance_loan(self, previous_loan, installment):
+        balance_loan = previous_loan - installment
+        return balance_loan
+
+    def fill_interest(self, previous_loan):
+        interest = 0.1 * previous_loan
+        return interest
+
+    def fill_total_amount(self):
+        total_amount = 1000 #self.share + self.installment + self.interest
+        return total_amount
 
     def __str__(self):
         return self.member.name
-
-    def previous_share(self):
-        pass
