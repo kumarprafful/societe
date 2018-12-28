@@ -35,7 +35,7 @@ class Member(models.Model):
 class MonthlyRecord(models.Model):
     member = models.ForeignKey(Member, related_name='members', on_delete=models.CASCADE)
     date = models.DateTimeField(default=datetime.now)
-    month = models.CharField(max_length=20, blank=True, null=True, default="jan")
+    month = models.IntegerField(blank=True, null=True, default=0)
     year = models.IntegerField(blank=True, null=True)
     previous_share = models.IntegerField(blank=True, null=True)
     previous_loan = models.IntegerField(blank=True, null=True)

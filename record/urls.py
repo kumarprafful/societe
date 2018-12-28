@@ -9,5 +9,9 @@ urlpatterns = [
     path('dashboard', record_views.dashboard, name='dashboard'),
     path('add-society', record_views.addSocietyView, name='add-society'),
     path('<id>/add-member', record_views.addMemberView, name='add-member'),
+    path('<id>', record_views.society_dash, name='society-dash'),
+    path('<id>/record', record_views.monthly_record, name='monthly-record'),
+
+
 
 ]

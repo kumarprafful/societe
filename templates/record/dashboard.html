@@ -1,3 +1,5 @@
+{% extends './base.html' %}
+
 {% block body %}
 <h1>DASHBOARD</h1>
 
@@ -8,7 +10,9 @@
       <address class="">
         {{society.address}}
       </address>
-      <a href="{% url 'record:add-member' id=society.id %}">Add member</a>
+      <p><a href="{% url 'record:add-member' id=society.id %}">Add member</a></p>
+      <p><a href="{% url 'record:society-dash' id=society.id %}">Manage members</a></p>
+      <p><a href="{% url 'record:monthly-record' id=society.id %}">Manage monthly records</a></p>
 
 
     {% endfor %}

@@ -1,0 +1,30 @@
+{% extends './base.html' %}
+
+{% block body %}
+{% if members %}
+<table class="highlight">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Starting share</th>
+      <th>Starting loan</th>
+    </tr>
+  </thead>
+{% for member in members %}
+  <tbody>
+    <tr>
+      <td>{{member.name}}</td>
+      <td>{{member.starting_share}}</td>
+      <td>{{member.starting_loan}}</td>
+
+    </tr>
+  </tbody>
+
+
+{% endfor %}
+
+
+</table>
+
+{% endif %}
+{% endblock %}

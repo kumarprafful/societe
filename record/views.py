@@ -13,6 +13,18 @@ def dashboard(request):
     societies = Society.objects.all()
     return render(request, 'record/dashboard.html', {'societies': societies})
 
+def society_dash(request, id):
+    society = Society.objects.get(id=id);
+    members = Member.objects.filter(society=society)
+    return render(request, 'record/society_dash.html', {'society': society, 'members': members})
+
+def monthly_record(request, id):
+    society = Society.objects.get(id=id);
+    monthly_records = MonthlyRecord.objects.filter(member__society=society)
+    return render(request, 'record/monthly_record.html', {'monthly_records':monthly_records})
+
+
+
 def addSocietyView(request):
     if request.method == 'POST':
         society_form = SocietyForm(data=request.POST)

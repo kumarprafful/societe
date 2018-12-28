@@ -5,4 +5,4 @@ from record.models import MonthlyRecord, Society, Member
 
 admin.site.register(Society)
 admin.site.register(Member)
-admin.site.register(MonthlyRecord)
+admin.site.register(MonthlyRecord, list_display=['member', 'month'])
