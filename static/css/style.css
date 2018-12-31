@@ -1,6 +1,8 @@
+select{
+  display: block;
+}
 body{
   background: #414141;
-  color: #fff;
 }
 select{
   display: block;
@@ -11,6 +13,93 @@ select, optgroup, option{
   background: transparent;
   color: #000;
 }
+/* for login alerts */
+.close:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.alert-dismissible .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: .75rem 1.25rem;
+    color: inherit;
+}
+.alert-dismissible .close:hover {
+  color: #000;
+}
+button.close {
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    -webkit-appearance: none;
+}
+.close {
+    float: right;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
+}
+.alert-danger{
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+.alert-dismissible{
+  padding-right: 4rem;
+}
+.alert{
+  position: relative;
+  padding: .75rem 1.25rem;
+  margin: 2rem 1rem 1rem 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}
+
+/* end */
+.ipu_logo{
+  height: 1.5em;
+  margin: .2em;
+}
+.ipu-brand{
+  display: flex;
+}
+.ipu-title-brand{
+  font-size: .2em;
+
+}
+.header{
+  background: #757575;
+  border-radius: 20px;
+}
+
+.card{
+  border-radius: 10px;
+}
+.card-inner{
+  padding: 2em 2em;
+}
+.login{
+  color: #222;
+  border-bottom: 2px solid maroon;
+  display: inline;
+  padding: .4em;
+}
+.tag{
+  color: #fff;
+  text-align: center;
+  border-radius: 10px;
+  width: 70%;
+  margin: 2em auto;
+}
+.input-login{
+  display: flex;
+  margin: 1.5em;
+}
+
 .month-selector{
   width: auto;
 }

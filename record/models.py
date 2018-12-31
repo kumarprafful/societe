@@ -57,34 +57,8 @@ class MonthlyRecord(models.Model):
 
     def fill_year(self):
         cur_date = self.date
-        print(cur_date.month, " THERE ")
         year = cur_date.year
         return year
-
-
-    def fill_share(self):
-        share = 200
-        return share
-
-    def fill_total_share(self, previous_share, share):
-        total_share = previous_share + share
-        return total_share
-
-    def fill_installment(self, installment):
-        # installment = 5000
-        return installment
-
-    def fill_balance_loan(self, previous_loan, installment):
-        balance_loan = previous_loan - installment
-        return balance_loan
-
-    def fill_interest(self, previous_loan):
-        interest = 0.01 * previous_loan
-        return interest
-
-    def fill_total_amount(self, share, installment, interest):
-        total_amount = share + installment + interest
-        return total_amount
 
     def __str__(self):
         return self.member.name

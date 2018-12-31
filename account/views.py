@@ -9,12 +9,12 @@ from account.forms import UserForm
 
 # Create your views here.
 def index(request):
-    return render(request, 'account/index.html')
+    return render(request, 'record/index.html')
 
 def user_register(request):
     registered = False
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('record:index'))
     elif request.method == "POST":
         user_form = UserForm(data=request.POST)
         if user_form.is_valid():
@@ -27,26 +27,26 @@ def user_register(request):
     return render(request, 'registration/user_register.html', {'registered': registered, 'user_form': user_form})
 
 def user_login(request):
-    if request.method == "POST":
-        username = request.POST('email')
-        password = request.POST('password')
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse('account::index'))
+                return HttpResponseRedirect(reverse('record:index'))
             else:
-                message.error(request, 'Account not active. Kindly contact ADMIN')
+                messages.error(request, 'Account not active. Kindly contact ADMIN')
         else:
-            message.error(request, "Your email and password didn't matched. Please try again")
+            messages.error(request, "Your email and password didn't matched. Please try again")
             return HttpResponseRedirect(reverse('account:user_login'))
     else:
         if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('account:imdex'))
+            return HttpResponseRedirect(reverse('record:index'))
         else:
             return render(request, 'registration/login.html', {})
 
 @login_required
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('account:index'))
+    return HttpResponseRedirect(reverse('record:index'))
