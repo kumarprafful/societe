@@ -10,6 +10,8 @@ class MemberForm(forms.ModelForm):
     class Meta:
         model = Member
         fields = ['name', 'starting_share', 'starting_loan']
+        widget=forms.TextInput(attrs={'class': "input-field"})
+
 
 class NewMonthlyRecordForm(forms.ModelForm):
     class Meta:

@@ -9,12 +9,12 @@ from account.forms import UserForm
 
 # Create your views here.
 def index(request):
-    return render(request, 'record/index.html')
+    return render(request, 'home/index.html')
 
 def user_register(request):
     registered = False
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('record:index'))
+        return HttpResponseRedirect(reverse('record:dashboard'))
     elif request.method == "POST":
         user_form = UserForm(data=request.POST)
         if user_form.is_valid():
@@ -34,7 +34,7 @@ def user_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse('record:index'))
+                return HttpResponseRedirect(reverse('record:dashboard'))
             else:
                 messages.error(request, 'Account not active. Kindly contact ADMIN')
         else:
@@ -42,11 +42,11 @@ def user_login(request):
             return HttpResponseRedirect(reverse('account:user_login'))
     else:
         if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('record:index'))
+            return HttpResponseRedirect(reverse('record:dashboard'))
         else:
             return render(request, 'registration/login.html', {})
 
 @login_required
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('record:index'))
+    return HttpResponseRedirect(reverse('record:dashboard'))

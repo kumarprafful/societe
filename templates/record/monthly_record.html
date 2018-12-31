@@ -6,6 +6,7 @@
     <h4>Filters</h4>
     Group by
     <form class="" method="post" onchange=handleSubmit(event)>
+      {% csrf_token %}
       <select class="month-selector" name="">
         <optgroup label="Months">
           <option value="1">January</option>
@@ -24,6 +25,7 @@
       </select>
       <input type="submit" name="submit" id="month_submit" hidden>
     </form>
+    <a href="" id="a_id" >lkjf</a>
   </div>
 
   <table class="highlight">
@@ -79,12 +81,16 @@
 $(document).ready(function(){
     $('.modal').modal();
   });
-  const handleSubmit = (e) => {
+  handleSubmit = (e) => {
+    e.preventDefault();
     // console.log(e.target.value);
     const sub =  document.getElementById("month_submit");
     sub.value=e.target.value;
-    sub.click();
-
+    // sub.click();
+    const society_id = {{society.id}};
+    const a = document.getElementById("a_id");
+    a.href = `${e.target.value}/`;
+    console.log(`a ${2+2}`);
 
 
 

@@ -4,7 +4,12 @@
 
 <form class="" method="post">
   {% csrf_token %}
-  {{society_form.as_p}}
+  {% for field in society_form %}
+          <div class="input-field">
+              {{ field.errors }}
+              {{ field.label_tag }}: {{ field }}
+          </div>
+      {% endfor %}
   <button class="waves-effect waves-light btn" type="submit" name="submit">Submit</button>
 </form>
 

@@ -1,20 +1,24 @@
 {% extends '../generics/base.html' %}
 
 {% block body %}
-
-<h1>DASHBOARD</h1>
+<div class="">
 
   {% if societies %}
     {% for society in societies %}
-      <p>{{society.society_name}}</p>
-      <p>{{society.president}}</p>
-      <address class="">
-        {{society.address}}
-      </address>
-      <p><a href="{% url 'record:add-member' id=society.id %}">Add member</a></p>
-      <p><a href="{% url 'record:society-dash' id=society.id %}">Manage members</a></p>
-      <p><a href="{% url 'record:monthly-record' id=society.id %}">Manage monthly records</a></p>
+    <div class="society-card">
+      <div class="center">
+        <h4 class="society-title">{{society.society_name}}</h4>
+        <p class="society-president">{{society.president}}</p>
+        <address class="society-address">{{society.address}}</address>
+    </div>
 
+    <div class="btn-container">
+      <span><a class="btn waves-effect waves-light" href="{% url 'record:add-member' id=society.id %}">Add member</a></span>
+      <span><a class="btn waves-effect waves-light" href="{% url 'record:society-dash' id=society.id %}">Manage members</a></span>
+      <span><a class="btn waves-effect waves-light" href="{% url 'record:monthly-record' id=society.id %}">Manage monthly records</a></span>
+    </div>
+
+    </div>
 
     {% endfor %}
 
@@ -26,10 +30,10 @@
 
 
     <!-- Modal Trigger -->
-    <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+    <!-- <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a> -->
 
     <!-- Modal Structure -->
-    <div id="modal1" class="modal">
+    <!-- <div id="modal1" class="modal">
       <div class="modal-content">
         <h4>Modal Header</h4>
         <p>A bunch of text</p>
@@ -43,13 +47,14 @@
         $(document).ready(function(){
            $('.modal').modal();
          });
-    </script>
+    </script> -->
 
 
 
 
 
 
+  </div>
 
 
 {% endblock %}

@@ -2,7 +2,7 @@ select{
   display: block;
 }
 body{
-  background: #414141;
+  background: #c1bcbc;
 }
 select{
   display: block;
@@ -13,6 +13,18 @@ select, optgroup, option{
   background: transparent;
   color: #000;
 }
+.container{
+  width: 100%;
+}
+.input-field label{
+  color: #222;
+}
+
+.input-field input{
+  width: auto;
+}
+
+
 /* for login alerts */
 .close:not(:disabled):not(.disabled) {
     cursor: pointer;
@@ -102,4 +114,36 @@ button.close {
 
 .month-selector{
   width: auto;
+}
+.btn-container{
+  margin-top: 1em;
+}
+
+.society-card{
+  background: rgb(215,215,215);
+  padding: 2em;
+  margin: 1em;
+  border-radius: 8px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+.society-title{
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  font-size: 3em;
+  line-height: 1em;
+}
+
+.society-president{
+  letter-spacing: .07em;
+  font-size: 1.2em;
+  line-height: 1em;
+
+}
+.society-address{
+
+}
+
+
+.add-member-container{
+  margin: 1em;
 }

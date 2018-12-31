@@ -11,24 +11,24 @@ from record import functions as func
 from datetime import datetime
 # Create your views here.
 
-def index(request):
-    return render(request, 'record/index.html')
+# def index(request):
+#     return render(request, 'record/index.html')
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def dashboard(request):
-    societies = Society.objects.all()
+    societies = Society.objects.filter(user=request.user)
     return render(request, 'record/dashboard.html', {'societies': societies})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def society_dash(request, id):
-    society = Society.objects.get(id=id)
+    society = Society.objects.get(id=id, user=request.user)
     members = Member.objects.filter(society=society)
     return render(request, 'record/society_dash.html', {'society': society, 'members': members})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
-def monthly_record(request, id):
+def monthly_record(request, id, month=datetime.now().month):
     society = Society.objects.get(id=id);
-    monthly_records = MonthlyRecord.objects.filter(member__society=society)
+    monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month)
     return render(request, 'record/monthly_record.html', {'society': society,'monthly_records': monthly_records})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
@@ -59,7 +59,10 @@ def addSocietyView(request):
     if request.method == 'POST':
         society_form = SocietyForm(data=request.POST)
         if society_form.is_valid():
-            society_form.save()
+            society = society_form.save(commit=False)
+            society.user = request.user
+            society.save()
+
         return HttpResponseRedirect(reverse('record:dashboard'))
     else:
         society_form = SocietyForm()
@@ -89,8 +92,8 @@ def addMemberView(request, id):
             record_form.previous_loan = member.starting_loan
             record_form.share = func.fill_share(200)
             record_form.total_share = func.fill_total_share(member.starting_share, 200)
-            record_form.installment = func.fill_installment(5000)
-            record_form.balance_loan = func.fill_balance_loan(member.starting_loan, 5000)
+            record_form.installment = func.fill_installment(0)
+            record_form.balance_loan = func.fill_balance_loan(member.starting_loan, 0)
             record_form.interest = func.fill_interest(member.starting_loan)
             record_form.total_amount = func.fill_total_amount(record_form.share, record_form.installment, record_form.interest)
             record_form.save()

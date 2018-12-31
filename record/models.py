@@ -1,4 +1,5 @@
 from django.db import models
+from account.models import User
 
 from datetime import datetime
 
@@ -7,7 +8,7 @@ class Society(models.Model):
     class Meta:
         verbose_name= 'Society'
         verbose_name_plural = 'Societies'
-
+    user = models.ForeignKey(User, related_name="owner", on_delete=models.CASCADE)
     society_name = models.CharField(max_length=1024, unique=True)
     president = models.CharField(max_length=1024)
     address = models.CharField(max_length=1024)

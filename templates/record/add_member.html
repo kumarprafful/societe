@@ -1,10 +1,26 @@
 {% extends '../generics/base.html' %}
 
 {% block body %}
+
+
+<div class="add-member-container">
+<div class="">
+
+</div>
+<div class="">
+<h3>Add new members</h3>
 <form class=""  method="post">
   {% csrf_token %}
-  {{member_form.as_p}}
+  {% for field in member_form %}
+          <div class="input-field">
+              {{ field.errors }}
+              {{ field.label_tag }}
+              {{ field }}
+          </div>
+      {% endfor %}
   <button class="btn waves-effect waves-light" name="submit">Submit</button>
 </form>
+</div>
+</div>
 
 {% endblock %}
