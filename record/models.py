@@ -79,11 +79,11 @@ class MonthlyRecord(models.Model):
         return balance_loan
 
     def fill_interest(self, previous_loan):
-        interest = 0.1 * previous_loan
+        interest = 0.01 * previous_loan
         return interest
 
-    def fill_total_amount(self):
-        total_amount = 1000 #self.share + self.installment + self.interest
+    def fill_total_amount(self, share, installment, interest):
+        total_amount = share + installment + interest
         return total_amount
 
     def __str__(self):

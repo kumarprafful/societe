@@ -11,7 +11,12 @@ class MemberForm(forms.ModelForm):
         model = Member
         fields = ['name', 'starting_share', 'starting_loan']
 
-# class MonthlyRecordForm(forms.ModelForm):
-#     class Meta:
-#         model = MonthlyRecord
-#
+class NewMonthlyRecordForm(forms.ModelForm):
+    class Meta:
+        model = MonthlyRecord
+        fields = ['installment',]
+
+class MonthlyRecordForm(forms.ModelForm):
+    class Meta:
+        model = MonthlyRecord
+        exclude = ('__all__')

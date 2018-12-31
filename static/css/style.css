@@ -1,3 +1,16 @@
+body{
+  background: #414141;
+  color: #fff;
+}
 select{
   display: block;
+  background: transparent;
+  color: #fff;
+}
+select, optgroup, option{
+  background: transparent;
+  color: #000;
+}
+.month-selector{
+  width: auto;
 }

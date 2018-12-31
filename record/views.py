@@ -3,7 +3,11 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from record.models import Society, Member, MonthlyRecord
-from record.forms import SocietyForm, MemberForm
+from record.forms import SocietyForm, MemberForm, NewMonthlyRecordForm, MonthlyRecordForm
+
+from record.functions import getNextMonth
+
+from datetime import datetime
 # Create your views here.
 
 def index(request):
@@ -14,16 +18,36 @@ def dashboard(request):
     return render(request, 'record/dashboard.html', {'societies': societies})
 
 def society_dash(request, id):
-    society = Society.objects.get(id=id);
+    society = Society.objects.get(id=id)
     members = Member.objects.filter(society=society)
     return render(request, 'record/society_dash.html', {'society': society, 'members': members})
 
 def monthly_record(request, id):
     society = Society.objects.get(id=id);
     monthly_records = MonthlyRecord.objects.filter(member__society=society)
-    return render(request, 'record/monthly_record.html', {'monthly_records':monthly_records})
+    return render(request, 'record/monthly_record.html', {'society': society,'monthly_records': monthly_records})
 
-
+def createMonthlyRecordView(request, id, month):
+    if request.method=='POST':
+        member = Member.objects.get(id=id)
+        prevRecord = MonthlyRecord.objects.get(member=member, month=month)
+        new_record_form = NewMonthlyRecordForm(data=request.POST)
+        if new_record_form.is_valid():
+            record = new_record_form.save(commit=False)
+            record.member = member
+            record.month = getNextMonth(prevRecord.month)
+            record.previous_share = prevRecord.total_share
+            record.previous_loan = prevRecord.balance_loan
+            record.share=200
+            record.total_share=record.previous_share+200
+            record.balance_loan=record.previous_loan-int(new_record_form.data['installment'])
+            record.interest=0.01*record.previous_loan
+            record.total_amount=record.installment+record.share+record.interest
+            record.save()
+            return HttpResponseRedirect(reverse('record:monthly-record', kwargs={'id':prevRecord.member.society.id}))
+    else:
+        new_record_form = NewMonthlyRecordForm()
+    return render(request, 'record/new_monthly_record.html', {'new_record_form': new_record_form})
 
 def addSocietyView(request):
     if request.method == 'POST':
@@ -40,25 +64,42 @@ def addMemberView(request, id):
     if request.method == 'POST':
         society = Society.objects.get(id=id)
         member_form = MemberForm(data=request.POST)
+        record_form = MonthlyRecordForm()
         if member_form.is_valid():
             member = member_form.save(commit=False)
+
             member.society = society
             member.fill_month()
             member.save()
 
             first_record = MonthlyRecord()
-            MonthlyRecord.objects.create(member=member,
-                                                    year=first_record.fill_year(),
-                                                    month=first_record.fill_month(),
-                                                    previous_share=member.starting_share,
-                                                    previous_loan=member.starting_loan,
-                                                    share=first_record.fill_share(),
-                                                    total_share=first_record.fill_total_share(member.starting_share, 200),
-                                                    installment=first_record.fill_installment(5000),
-                                                    balance_loan=first_record.fill_balance_loan(member.starting_loan, 5000),
-                                                    interest=first_record.fill_interest(member.starting_loan),
-                                                    # total_amount=first_record.fill_total_amount,
-                                            )
+
+            record_form = record_form.save(commit=False)
+            record_form.member = member
+            record_form.year=first_record.fill_year()
+            record_form.month=first_record.fill_month()
+            record_form.previous_share=member.starting_share
+            record_form.previous_loan=member.starting_loan
+            record_form.share=first_record.fill_share()
+            record_form.total_share=first_record.fill_total_share(member.starting_share, 200)
+            record_form.installment=first_record.fill_installment(5000)
+            record_form.balance_loan=first_record.fill_balance_loan(member.starting_loan, 5000)
+            record_form.interest=first_record.fill_interest(member.starting_loan)
+            record_form.total_amount=first_record.fill_total_amount(record_form.share, record_form.installment, record_form.interest)
+            record_form.save()
+
+            # MonthlyRecord.objects.create(member=member,
+            #                                 year=first_record.fill_year(),
+            #                                 month=first_record.fill_month(),
+            #                                 previous_share=member.starting_share,
+            #                                 previous_loan=member.starting_loan,
+            #                                 share=first_record.fill_share(),
+            #                                 total_share=first_record.fill_total_share(member.starting_share, 200),
+            #                                 installment=first_record.fill_installment(5000),
+            #                                 balance_loan=first_record.fill_balance_loan(member.starting_loan, 5000),
+            #                                 interest=first_record.fill_interest(member.starting_loan),
+            #                                 total_amount=first_record.fill_total_amount(),
+            #                             )
 
             # first_record.year = first_record.fill_year
             # first_record.previous_share = member.starting_share
