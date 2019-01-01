@@ -203,17 +203,34 @@ button.close {
 
 
 @media screen and (max-width: 720px) {
+  
   .card-container{
     text-align: center;
     margin: 5em 2em;
 
   }
+  .control input{
+    width: 100%!important;
+  }
+  .submit-btn{
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 1020px) {
+
   .card-container{
     text-align: center;
     margin: 5em 2em;
 
+  }
+  .control input{
+    width: 100%!important;
+  }
+  .submit-btn{
+    width: 100%;
+  }
+  .brand-logo{
+    font-size: 1em!important;
   }
 }
