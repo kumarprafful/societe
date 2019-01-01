@@ -1,7 +1,21 @@
 {% extends '../generics/base.html' %}
 
 {% block body %}
-<div class="">
+{% include '../home/navbar.html' %}
+
+<div class="container">
+  <div class="fixed-action-btn horizontal click-to-toggle" position="static">
+    <a class="btn-floating btn-large red">
+      <i class="large material-icons">add</i>
+    </a>
+    <ul>
+      <li><a class="btn-floating yellow darken-3" href="{% url 'record:add-society' %}"><i class="material-icons">home</i></a></li>
+      <!-- <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+      <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+      <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li> -->
+    </ul>
+  </div>
+
 
   {% if societies %}
     {% for society in societies %}
@@ -23,8 +37,12 @@
     {% endfor %}
 
   {% else %}
+
+  <div class="empty center">
     <h1>No Society registered</h1>
-    <a href="{% url 'record:add-society' %}" class="btn">ADD</a>
+    <a href="{% url 'record:add-society' %}" class="btn btn-large waves-effect waves-light">ADD</a>
+  </div>
+
   {% endif %}
 
 
@@ -44,14 +62,15 @@
       </div>
     </div>
 
-    <script type="text/javascript">
-        $(document).ready(function(){
-           $('.modal').modal();
-         });
-    </script> -->
+  -->
 
 
+  <script type="text/javascript">
+      $(document).ready(function(){
+        $('.fixed-action-btn').floatingActionButton();
 
+       });
+  </script>
 
 
 

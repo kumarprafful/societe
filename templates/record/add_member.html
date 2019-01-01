@@ -1,24 +1,27 @@
 {% extends '../generics/base.html' %}
 
 {% block body %}
+{% include './cust_nav.html' %}
 
 
-<div class="add-member-container">
+<div class="container">
 <div class="">
 
-</div>
-<div class="">
-<h3>Add new members</h3>
+
+
+
+
+<h5>Add members to {{society}}.</h5>
 <form class=""  method="post">
   {% csrf_token %}
   {% for field in member_form %}
-          <div class="input-field">
+          <div class="input-field control">
               {{ field.errors }}
               {{ field.label_tag }}
               {{ field }}
           </div>
       {% endfor %}
-  <button class="btn waves-effect waves-light" name="submit">Submit</button>
+  <button class="waves-effect waves-light btn submit-btn" name="submit">Submit</button>
 </form>
 </div>
 </div>

@@ -1,8 +1,23 @@
+
 select{
   display: block;
 }
 body{
-  background: #c1bcbc;
+  background: #fff8e1;
+  color: #222222c9;
+}
+h1,h2,h3,h4,h5,h6,p{
+  color: #222222c9!important;
+
+}
+button{
+  background-color: #ff5722!important;
+}
+.btn{
+  background-color: #ff5722!important;
+}
+button.close{
+  background-color: transparent!important;
 }
 select{
   display: block;
@@ -16,13 +31,21 @@ select, optgroup, option{
 .container{
   width: 100%;
 }
+.input-field {
+  padding-top: 1em;
+}
 .input-field label{
-  color: #222;
+  color: #bdbdbd;
 }
 
 .input-field input{
   width: auto;
 }
+.login-input{
+  margin-top: 1em!important;
+  width: 90%!important;
+}
+
 
 
 /* for login alerts */
@@ -88,15 +111,25 @@ button.close {
   border-radius: 20px;
 }
 
+.card-container{
+  margin: 5em 28em;
+  border: 1px solid rgb(215,215,215);
+  border-radius: 4px;
+  background: #fff;
+  border-bottom-width: 0px;
+
+}
+
 .card{
-  border-radius: 10px;
+  border-radius: 0;
 }
 .card-inner{
   padding: 2em 2em;
+  border:0;
 }
 .login{
   color: #222;
-  border-bottom: 2px solid maroon;
+  /* border-bottom: 2px solid maroon; */
   display: inline;
   padding: .4em;
 }
@@ -120,11 +153,12 @@ button.close {
 }
 
 .society-card{
-  background: rgb(215,215,215);
+  background: #fff;
   padding: 2em;
   margin: 1em;
-  border-radius: 8px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  border-radius: 5px;
+  border: .5px solid #776f6f42;
+  /* box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); */
 }
 .society-title{
   text-transform: uppercase;
@@ -146,4 +180,40 @@ button.close {
 
 .add-member-container{
   margin: 1em;
+}
+.login-btn{
+  width: 95%;
+  margin-top: 2em;
+}
+.mics-container{
+  background: #80808030;
+  width: 100%;
+  padding: .01em;
+}
+
+.empty{
+
+}
+.control input{
+  width: 50%!important;
+}
+.submit-btn{
+  width: 50%;
+}
+
+
+@media screen and (max-width: 720px) {
+  .card-container{
+    text-align: center;
+    margin: 5em 2em;
+
+  }
+}
+
+@media screen and (max-width: 1020px) {
+  .card-container{
+    text-align: center;
+    margin: 5em 2em;
+
+  }
 }

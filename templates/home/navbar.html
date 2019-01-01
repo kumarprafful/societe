@@ -1,0 +1,31 @@
+<div class="navbar-fixed">
+<nav>
+   <div class="nav-wrapper orange accent">
+     <a href="{% url 'record:dashboard' %}" class="brand-logo">SOCIETE</a>
+     <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+       {% if user.is_authenticated %}
+       <li><a href="#">{{user}}</a></li>
+
+       <li><a href="{% url 'account:user_logout' %}">Logout</a></li>
+
+       {% else %}
+
+       <li><a href="{% url 'account:user_login' %}"><i class="large material-icons left">account_circle</i>Login</a></li>
+       <li><a href="{% url 'account:user_register' %}"><i class="large material-icons left">add_circle</i>Register</a></li>
+       {% endif %}
+     </ul>
+
+      <ul class="right hide-on-med-and-up show-on-medium-and-down">
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'account:user_logout' %}"><i class="material-icons">search</i></a></li>
+          {% else %}
+          <li><a href="{% url 'account:user_login' %}"></a><i class="large material-icons">account_circle</i></li>
+        {% endif %}
+
+      </ul>
+
+
+   </div>
+ </nav>
+</div>

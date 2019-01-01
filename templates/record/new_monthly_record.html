@@ -2,13 +2,18 @@
 
 {% block body %}
 
+{% include './cust_nav.html' %}
+
+<div class="container">
+
 <form class="" method="post">
   {% csrf_token %}
 
   {{new_record_form.as_p}}
 
-  <button name="button">Submit</button>
+  <button class="btn waves-effect waves-light">Submit</button>
 
 </form>
+</div>
 
 {% endblock %}

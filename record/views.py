@@ -11,9 +11,6 @@ from record import functions as func
 from datetime import datetime
 # Create your views here.
 
-# def index(request):
-#     return render(request, 'record/index.html')
-
 @login_required(login_url=reverse_lazy('account:user_login'))
 def dashboard(request):
     societies = Society.objects.filter(user=request.user)
@@ -22,20 +19,21 @@ def dashboard(request):
 @login_required(login_url=reverse_lazy('account:user_login'))
 def society_dash(request, slug):
     society = Society.objects.get(slug=slug, user=request.user)
-    members = Member.objects.filter(society=society)
+    members = Member.objects.filter(society=society, active=1)
     return render(request, 'record/society_dash.html', {'society': society, 'members': members})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def monthly_record(request, slug, month=datetime.now().month):
     society = Society.objects.get(slug=slug);
-    monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month)
+    monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month, member__active=1)
     return render(request, 'record/monthly_record.html', {'society': society,'monthly_records': monthly_records})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def createMonthlyRecordView(request, slug, id, month):
+    society = Society.objects.get(slug=slug)
     if request.method=='POST':
         member = Member.objects.get(id=id)
-        prevRecord = MonthlyRecord.objects.get(member=member, month=month)
+        prevRecord = MonthlyRecord.objects.get(member=member, month=month, member__active=1)
         new_record_form = NewMonthlyRecordForm(data=request.POST)
         if new_record_form.is_valid():
             record = new_record_form.save(commit=False)
@@ -52,7 +50,7 @@ def createMonthlyRecordView(request, slug, id, month):
             return HttpResponseRedirect(reverse('record:monthly-record', kwargs={'slug':prevRecord.member.society.slug}))
     else:
         new_record_form = NewMonthlyRecordForm()
-    return render(request, 'record/new_monthly_record.html', {'new_record_form': new_record_form})
+    return render(request, 'record/new_monthly_record.html', {'new_record_form': new_record_form, 'society': society})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def addSocietyView(request):
@@ -62,8 +60,7 @@ def addSocietyView(request):
             society = society_form.save(commit=False)
             society.user = request.user
             society.save()
-
-        return HttpResponseRedirect(reverse('record:dashboard'))
+            return HttpResponseRedirect(reverse('record:dashboard'))
     else:
         society_form = SocietyForm()
             # return HttpResponseRedirect(reverse('record:index'))
@@ -71,8 +68,8 @@ def addSocietyView(request):
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def addMemberView(request, slug):
+    society = Society.objects.get(slug=slug)
     if request.method == 'POST':
-        society = Society.objects.get(slug=slug)
         member_form = MemberForm(data=request.POST)
         record_form = MonthlyRecordForm()
         if member_form.is_valid():
@@ -101,4 +98,11 @@ def addMemberView(request, slug):
         return HttpResponseRedirect(reverse('record:dashboard'))
     else:
         member_form = MemberForm()
-    return render(request, 'record/add_member.html', {'member_form': member_form})
+    return render(request, 'record/add_member.html', {'member_form': member_form, 'society': society})
+
+
+def delete_member_view(request, soc_id, id):
+    member = Member.objects.get(society_id=soc_id, id=id)
+    member.active = 0
+    member.save()
+    return HttpResponseRedirect(reverse('record:society-dash', kwargs = {'slug':member.society.slug}))

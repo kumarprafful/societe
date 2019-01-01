@@ -36,6 +36,7 @@ class Member(models.Model):
     starting_loan = models.IntegerField(blank=False, null=False)
     date_of_creation = models.DateTimeField(default=datetime.now)
     month_of_creation = models.IntegerField(default=0)
+    active = models.BooleanField(default=1)
 
     def fill_month(self):
         if self.date_of_creation:

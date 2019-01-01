@@ -12,6 +12,7 @@ urlpatterns = [
     path('<slug>/', record_views.society_dash, name='society-dash'),
     path('<slug>/record/', record_views.monthly_record, name='monthly-record'),
     path('<slug>/<id>/<month>/change/', record_views.createMonthlyRecordView, name='change-prev-data'),
+    path('<soc_id>/delete-member/<id>', record_views.delete_member_view, name='delete-member'),
 
 
 

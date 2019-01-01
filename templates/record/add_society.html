@@ -1,17 +1,27 @@
 {% extends '../generics/base.html' %}
 
 {% block body %}
+{% include '../home/navbar.html' %}
 
+<div class="container">
+<div class="">
+
+
+
+
+<h5>Add society</h5>
 <form class="" method="post">
   {% csrf_token %}
   {% for field in society_form %}
-          <div class="input-field">
+          <div class="input-field control">
               {{ field.errors }}
               {{ field.label_tag }}
               {{ field }}
           </div>
       {% endfor %}
-  <button class="waves-effect waves-light btn" type="submit" name="submit">Submit</button>
+  <button class="waves-effect waves-light btn submit-btn" type="submit" name="submit">Submit</button>
 </form>
+</div>
+</div>
 
 {% endblock %}
