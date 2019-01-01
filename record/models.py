@@ -1,4 +1,7 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from django.template.defaultfilters import slugify
+
 from account.models import User
 
 from datetime import datetime
@@ -10,9 +13,18 @@ class Society(models.Model):
         verbose_name_plural = 'Societies'
     user = models.ForeignKey(User, related_name="owner", on_delete=models.CASCADE)
     society_name = models.CharField(max_length=1024, unique=True)
+    slug = models.SlugField(_('slug'), db_index=True, max_length=2024, unique=True)
     president = models.CharField(max_length=1024)
     address = models.CharField(max_length=1024)
     date_of_creation = models.DateTimeField(default=datetime.now)
+
+    def get_absolute_url(self):
+        return reverse('record:society-dash', args=[self.id, self.slug])
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.society_name)
+        super(Society, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.society_name

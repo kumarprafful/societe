@@ -62,7 +62,7 @@
           <td>{{record.late_fees}}</td>
           <td>{{record.total_amount}}</td>
 
-          <td><a class="" href="{% url 'record:change-prev-data' id=record.member.id month=record.month %}">fill installment</a></td>
+          <td><a class="" href="{% url 'record:change-prev-data' slug=society.slug id=record.member.id month=record.month %}">fill installment</a></td>
 
 
         </tr>

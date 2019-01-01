@@ -20,19 +20,19 @@ def dashboard(request):
     return render(request, 'record/dashboard.html', {'societies': societies})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
-def society_dash(request, id):
-    society = Society.objects.get(id=id, user=request.user)
+def society_dash(request, slug):
+    society = Society.objects.get(slug=slug, user=request.user)
     members = Member.objects.filter(society=society)
     return render(request, 'record/society_dash.html', {'society': society, 'members': members})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
-def monthly_record(request, id, month=datetime.now().month):
-    society = Society.objects.get(id=id);
+def monthly_record(request, slug, month=datetime.now().month):
+    society = Society.objects.get(slug=slug);
     monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month)
     return render(request, 'record/monthly_record.html', {'society': society,'monthly_records': monthly_records})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
-def createMonthlyRecordView(request, id, month):
+def createMonthlyRecordView(request, slug, id, month):
     if request.method=='POST':
         member = Member.objects.get(id=id)
         prevRecord = MonthlyRecord.objects.get(member=member, month=month)
@@ -49,7 +49,7 @@ def createMonthlyRecordView(request, id, month):
             record.interest = func.fill_interest(record.previous_loan)
             record.total_amount = func.fill_total_amount(record.share, record.installment, record.interest)
             record.save()
-            return HttpResponseRedirect(reverse('record:monthly-record', kwargs={'id':prevRecord.member.society.id}))
+            return HttpResponseRedirect(reverse('record:monthly-record', kwargs={'slug':prevRecord.member.society.slug}))
     else:
         new_record_form = NewMonthlyRecordForm()
     return render(request, 'record/new_monthly_record.html', {'new_record_form': new_record_form})
@@ -70,9 +70,9 @@ def addSocietyView(request):
     return render(request, 'record/add_society.html', {'society_form': society_form})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
-def addMemberView(request, id):
+def addMemberView(request, slug):
     if request.method == 'POST':
-        society = Society.objects.get(id=id)
+        society = Society.objects.get(slug=slug)
         member_form = MemberForm(data=request.POST)
         record_form = MonthlyRecordForm()
         if member_form.is_valid():

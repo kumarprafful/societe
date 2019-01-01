@@ -13,9 +13,9 @@
     </div>
 
     <div class="btn-container">
-      <span><a class="btn waves-effect waves-light" href="{% url 'record:add-member' id=society.id %}">Add member</a></span>
-      <span><a class="btn waves-effect waves-light" href="{% url 'record:society-dash' id=society.id %}">Manage members</a></span>
-      <span><a class="btn waves-effect waves-light" href="{% url 'record:monthly-record' id=society.id %}">Manage monthly records</a></span>
+      <span><a class="btn waves-effect waves-light" href="{% url 'record:add-member' slug=society.slug %}">Add member</a></span>
+      <span><a class="btn waves-effect waves-light" href="{% url 'record:society-dash' slug=society.slug %}">Manage members</a></span>
+      <span><a class="btn waves-effect waves-light" href="{% url 'record:monthly-record' slug=society.slug %}">Manage monthly records</a></span>
     </div>
 
     </div>
@@ -24,6 +24,7 @@
 
   {% else %}
     <h1>No Society registered</h1>
+    <a href="{% url 'record:add-society' %}" class="btn">ADD</a>
   {% endif %}
 
 
