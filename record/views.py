@@ -3,8 +3,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 
-from record.models import Society, Member, MonthlyRecord
-from record.forms import SocietyForm, MemberForm, NewMonthlyRecordForm, MonthlyRecordForm
+from record.models import Society, Member, MonthlyRecord, SocietySetting
+from record.forms import SocietyForm, MemberForm, NewMonthlyRecordForm, MonthlyRecordForm, SocietySettingForm
 
 from record import functions as func
 
@@ -27,6 +27,12 @@ def monthly_record(request, slug, month=datetime.now().month):
     society = Society.objects.get(slug=slug);
     monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month, member__active=1)
     return render(request, 'record/monthly_record.html', {'society': society,'monthly_records': monthly_records})
+
+@login_required(login_url=reverse_lazy('account:user_login'))
+def all_record(request, slug):
+    society = Society.objects.get(slug=slug)
+    records = MonthlyRecord.objects.filter(member__society=society, member__active=1).order_by('-month')
+    return render(request, 'record/all_records.html', {'society':society, 'records': records})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def createMonthlyRecordView(request, slug, id, month):
@@ -60,11 +66,24 @@ def addSocietyView(request):
             society = society_form.save(commit=False)
             society.user = request.user
             society.save()
+            SocietySetting.objects.create(society=society)
             return HttpResponseRedirect(reverse('record:dashboard'))
     else:
         society_form = SocietyForm()
             # return HttpResponseRedirect(reverse('record:index'))
     return render(request, 'record/add_society.html', {'society_form': society_form})
+
+@login_required(login_url=reverse_lazy('account:user_login'))
+def society_settings(request, slug):
+    settings = SocietySetting.objects.get(society__slug=slug)
+    if request.method == 'POST':
+        settings_form = SocietySettingForm(data=request.Data, instance=settings)
+        if settings_form.is_valid():
+            settings_form.save()
+            return HttpResponseRedirect(reverse('record:dashboard'))
+    else:
+        settings_form = SocietySettingForm(instance=settings)
+    return render(request, 'record/society_settings.html', {'settings_form': settings_form})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def addMemberView(request, slug):
@@ -101,6 +120,7 @@ def addMemberView(request, slug):
     return render(request, 'record/add_member.html', {'member_form': member_form, 'society': society})
 
 
+@login_required(login_url=reverse_lazy('account:user_login'))
 def delete_member_view(request, soc_id, id):
     member = Member.objects.get(society_id=soc_id, id=id)
     member.active = 0

@@ -29,6 +29,18 @@ class Society(models.Model):
     def __str__(self):
         return self.society_name
 
+class SocietySetting(models.Model):
+    society = models.OneToOneField(Society, on_delete=models.CASCADE)
+    basic_share = models.IntegerField(default=200)
+    interest_rate = models.DecimalField(default=0.01, max_digits=2, decimal_places=2)
+
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.society.society_name
+
+
+
 class Member(models.Model):
     society = models.ForeignKey(Society, related_name='society', on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
@@ -59,7 +71,7 @@ class MonthlyRecord(models.Model):
     balance_loan = models.IntegerField(blank=True, null=True)
     interest = models.IntegerField(blank=True, null=True)
     late_fees = models.IntegerField(default=0, blank=True, null=True)
-    total_amount = models.IntegerField(blank=True, null=True, default=10)
+    total_amount = models.IntegerField(blank=True, null=True)
     remarks = models.CharField(max_length=30, blank=True, null=True)
 
 

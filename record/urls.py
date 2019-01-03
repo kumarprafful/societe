@@ -10,9 +10,12 @@ urlpatterns = [
     path('add-society/', record_views.addSocietyView, name='add-society'),
     path('<slug>/add-member/', record_views.addMemberView, name='add-member'),
     path('<slug>/', record_views.society_dash, name='society-dash'),
+    path('<slug>/settings/', record_views.society_settings, name='society-settings'),
     path('<slug>/record/', record_views.monthly_record, name='monthly-record'),
     path('<slug>/<id>/<month>/change/', record_views.createMonthlyRecordView, name='change-prev-data'),
-    path('<soc_id>/delete-member/<id>', record_views.delete_member_view, name='delete-member'),
+    path('<soc_id>/delete-member/<id>/', record_views.delete_member_view, name='delete-member'),
+    path('<slug>/all_record/', record_views.all_record, name='all-records'),
+
 
 
 

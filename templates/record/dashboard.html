@@ -5,11 +5,11 @@
 
 <div class="container">
   <div class="fixed-action-btn horizontal click-to-toggle" position="static">
-    <a class="btn-floating btn-large red">
+    <a class="btn-floating btn-large red tooltipped" data-position="left" data-tooltip="Add more societies..." >
       <i class="large material-icons">add</i>
     </a>
     <ul>
-      <li><a class="btn-floating yellow darken-3" href="{% url 'record:add-society' %}"><i class="material-icons">home</i></a></li>
+      <li><a class="btn-floating yellow darken-3 tooltipped" data-position="left" data-tooltip="Add more societies..." href="{% url 'record:add-society' %}"><i class="material-icons">home</i></a></li>
       <!-- <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
       <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
       <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li> -->
@@ -30,6 +30,10 @@
       <span><a class="btn waves-effect waves-light" href="{% url 'record:add-member' slug=society.slug %}">Add member</a></span>
       <span><a class="btn waves-effect waves-light" href="{% url 'record:society-dash' slug=society.slug %}">Manage members</a></span>
       <span><a class="btn waves-effect waves-light" href="{% url 'record:monthly-record' slug=society.slug %}">Manage monthly records</a></span>
+      <span><a class="btn waves-effect waves-light" href="{% url 'record:all-records' slug=society.slug %}">All records</a></span>
+      <span><a class="btn-floating btn-large grey darken-2 waves-effect waves-light right tooltipped" data-position="top" data-tooltip="Settings" href="{% url 'record:society-settings' slug=society.slug %}"><i class="large material-icons">settings</i> </a></span>
+
+
     </div>
 
     </div>
@@ -68,6 +72,7 @@
   <script type="text/javascript">
       $(document).ready(function(){
         $('.fixed-action-btn').floatingActionButton();
+        $('.tooltipped').tooltip();
 
        });
   </script>

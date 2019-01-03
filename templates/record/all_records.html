@@ -1,0 +1,57 @@
+{% extends '../generics/base.html' %}
+
+{% block body %}
+
+  {% include './cust_nav.html' %}
+  <div class="container">
+
+    <table class="highlight">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Month</th>
+          <th>Previous Share</th>
+          <th>Previous Loan</th>
+          <th>Share</th>
+          <th>Total Share</th>
+          <th>Installment</th>
+          <th>Balance Loan</th>
+          <th>Interest</th>
+          <th>Late Fees</th>
+          <th>Total Amount</th>
+          <th>get previos data</th>
+
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in monthly_records %}
+          <tr>
+            <td>{{record}}</td>
+            <td>{{record.month}}</td>
+            <td>{{record.previous_share}}</td>
+            <td>{{record.previous_loan}}</td>
+            <td>{{record.share}}</td>
+            <td>{{record.total_share}}</td>
+            <td>{{record.installment}}</td>
+            <td>{{record.balance_loan}}</td>
+            <td>{{record.interest}}</td>
+            <td>{{record.late_fees}}</td>
+            <td>{{record.total_amount}}</td>
+
+            <td><a class="" href="{% url 'record:change-prev-data' slug=society.slug id=record.member.id month=record.month %}">fill installment</a></td>
+
+
+          </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+
+
+
+  </div>
+
+
+
+{% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from record.models import Society, Member, MonthlyRecord
+from record.models import Society, Member, MonthlyRecord, SocietySetting
 
 class SocietyForm(forms.ModelForm):
     class Meta:
@@ -22,3 +22,8 @@ class MonthlyRecordForm(forms.ModelForm):
     class Meta:
         model = MonthlyRecord
         exclude = ('__all__')
+
+class SocietySettingForm(forms.ModelForm):
+    class Meta:
+        model = SocietySetting
+        exclude = ['society']
