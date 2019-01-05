@@ -1,5 +1,6 @@
+import json
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 
@@ -29,6 +30,13 @@ def monthly_record(request, slug, month=datetime.now().month):
     return render(request, 'record/monthly_record.html', {'society': society,'monthly_records': monthly_records})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
+def monthly_record_ajax(request, slug, month=datetime.now().month):
+    society = Society.objects.get(slug=slug);
+    monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month, member__active=1).values('balance_loan', 'date', 'id', 'installment', 'interest', 'late_fees', 'member','member_name', 'member_id', 'month', 'previous_loan', 'previous_share', 'remarks', 'share', 'total_amount', 'total_share', 'year')
+
+    return JsonResponse({'monthly_records': list(monthly_records)}, content_type="application/json")
+
+@login_required(login_url=reverse_lazy('account:user_login'))
 def all_record(request, slug):
     society = Society.objects.get(slug=slug)
     records = MonthlyRecord.objects.filter(member__society=society, member__active=1).order_by('-month')
@@ -44,6 +52,7 @@ def createMonthlyRecordView(request, slug, id, month):
         if new_record_form.is_valid():
             record = new_record_form.save(commit=False)
             record.member = member
+            record.member_name = member.name
             record.month = func.getNextMonth(prevRecord.month)
             record.previous_share = prevRecord.total_share
             record.previous_loan = prevRecord.balance_loan
@@ -102,6 +111,7 @@ def addMemberView(request, slug):
 
             record_form = record_form.save(commit=False)
             record_form.member = member
+            record_form.member_name = member.name
             record_form.year = first_record.fill_year()
             record_form.month = first_record.fill_month()
             record_form.previous_share = member.starting_share

@@ -19,13 +19,13 @@
           <th>Interest</th>
           <th>Late Fees</th>
           <th>Total Amount</th>
-          <th>get previos data</th>
+          <th>Edit</th>
 
 
         </tr>
       </thead>
       <tbody>
-        {% for record in monthly_records %}
+        {% for record in records %}
           <tr>
             <td>{{record}}</td>
             <td>{{record.month}}</td>
@@ -39,7 +39,7 @@
             <td>{{record.late_fees}}</td>
             <td>{{record.total_amount}}</td>
 
-            <td><a class="" href="{% url 'record:change-prev-data' slug=society.slug id=record.member.id month=record.month %}">fill installment</a></td>
+            <td><a class="" href="#">Edit</a></td>
 
 
           </tr>

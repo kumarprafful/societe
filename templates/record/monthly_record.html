@@ -9,9 +9,7 @@
   <div class="">
     <h4>Filters</h4>
     Group by
-    <form class="" method="post" onchange=handleSubmit(event)>
-      {% csrf_token %}
-      <select class="month-selector" name="">
+      <select class="month-selector" name="" onchange="handleMonthChange(event)">
         <optgroup label="Months">
           <option value="1">January</option>
           <option value="2">February</option>
@@ -27,12 +25,11 @@
           <option value="12">December</option>
         </optgroup>
       </select>
-      <input type="submit" name="submit" id="month_submit" hidden>
-    </form>
+
     <a href="" id="a_id" >lkjf</a>
   </div>
 
-  <table class="highlight">
+  <table class="highlight" id="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -85,20 +82,27 @@
 $(document).ready(function(){
     $('.modal').modal();
   });
-  handleSubmit = (e) => {
-    e.preventDefault();
-    // console.log(e.target.value);
-    const sub =  document.getElementById("month_submit");
-    sub.value=e.target.value;
-    // sub.click();
-    const society_id = {{society.id}};
-    const a = document.getElementById("a_id");
-    a.href = `${e.target.value}/`;
-    console.log(`a ${2+2}`);
+  handleMonthChange = (e) => {
+    console.log(e.target.value);
+    var month = e.target.value;
+    console.log(month);
+    $.ajax({
+      type: "GET",
+      url: "{% url 'record:monthly-record-ajax' society.slug 0 %}".replace("0", month),
+      success: function(result) {
+        data = result.monthly_records;
+        $('#table tbody tr').remove();
+        for(i=0; i<data.length; i++){
+          $('#table').append('<tr><td>'+data[i].member_name+'</td><td>'+data[i].month+'</td><td>'+data[i].previous_share+'</td><td>'+data[i].previous_loan+'</td><td>'+data[i].share+'</td><td>'+data[i].total_share+'</td><td>'+data[i].installment+'</td><td>'+data[i].balance_loan+'</td><td>'+data[i].interest+'</td><td>'+data[i].late_fees+'</td><td>'+data[i].total_amount+'</td></tr>' );
+        }
 
-
-
+      }
+    })
   }
+
+
+
+
 </script>
 
 {% endblock%}
