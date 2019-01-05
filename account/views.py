@@ -9,7 +9,7 @@ from account.forms import UserForm
 
 # Create your views here.
 def index(request):
-    return render(request, 'home/index.html')
+    return HttpResponseRedirect(reverse('account:user_login'))
 
 def user_register(request):
     registered = False
