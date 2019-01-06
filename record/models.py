@@ -60,7 +60,7 @@ class Member(models.Model):
 
 class MonthlyRecord(models.Model):
     member = models.ForeignKey(Member, related_name='members', on_delete=models.CASCADE)
-    member_name = models.CharField(max_length=1024, blank=True, null=True)
+    member_name = models.CharField(max_length=1025, blank=True, null=True)
     date = models.DateTimeField(default=datetime.now)
     month = models.IntegerField(blank=True, null=True, default=0)
     year = models.IntegerField(blank=True, null=True)
