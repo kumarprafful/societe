@@ -23,6 +23,11 @@ class MonthlyRecordForm(forms.ModelForm):
         model = MonthlyRecord
         exclude = ('__all__')
 
+class EditMonthlyRecordForm(forms.ModelForm):
+    class Meta:
+        model = MonthlyRecord
+        exclude = ('member', 'installment_filled')
+
 class SocietySettingForm(forms.ModelForm):
     class Meta:
         model = SocietySetting

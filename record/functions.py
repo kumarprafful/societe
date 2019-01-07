@@ -7,6 +7,15 @@ def getNextMonth(curMonth):
             nxtMonth=1
     return str(nxtMonth)
 
+def gegtNextYear(curMonth, curYear):
+    curMonth = int(curMonth)
+    if(curMonth>0 and curMonth<13):
+        if(curMonth>=1 and curMonth < 12):
+            nxtYear = curYear
+        elif curMonth==12:
+            nxtYear+=1
+    return str(nxtYear)
+
 def fill_share(share):
     return share
 

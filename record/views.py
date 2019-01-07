@@ -5,7 +5,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 
 from record.models import Society, Member, MonthlyRecord, SocietySetting
-from record.forms import SocietyForm, MemberForm, NewMonthlyRecordForm, MonthlyRecordForm, SocietySettingForm
+from record.forms import SocietyForm, MemberForm, NewMonthlyRecordForm, MonthlyRecordForm, SocietySettingForm, EditMonthlyRecordForm
 
 from record import functions as func
 
@@ -24,9 +24,9 @@ def society_dash(request, slug):
     return render(request, 'record/society_dash.html', {'society': society, 'members': members})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
-def monthly_record(request, slug, month=datetime.now().month):
+def monthly_record(request, slug):
     society = Society.objects.get(slug=slug);
-    monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month, member__active=1)
+    monthly_records = MonthlyRecord.objects.filter(member__society=society, installment_filled=False, member__active=1)
     return render(request, 'record/monthly_record.html', {'society': society,'monthly_records': monthly_records})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
@@ -54,18 +54,36 @@ def createMonthlyRecordView(request, slug, id, month):
             record.member = member
             record.member_name = member.name
             record.month = func.getNextMonth(prevRecord.month)
+            record,year = func.getNextYear(prevRecord.month, prevRecord.year)
             record.previous_share = prevRecord.total_share
             record.previous_loan = prevRecord.balance_loan
             record.share = func.fill_share(200)
             record.total_share = func.fill_total_share(record.previous_share, record.share)
             record.balance_loan = func.fill_balance_loan(record.previous_loan, int(new_record_form.data['installment']))
+            prevRecord.installment_filled = 1
             record.interest = func.fill_interest(record.previous_loan)
             record.total_amount = func.fill_total_amount(record.share, record.installment, record.interest)
+            prevRecord.save()
             record.save()
             return HttpResponseRedirect(reverse('record:monthly-record', kwargs={'slug':prevRecord.member.society.slug}))
     else:
         new_record_form = NewMonthlyRecordForm()
     return render(request, 'record/new_monthly_record.html', {'new_record_form': new_record_form, 'society': society})
+
+@login_required(login_url=reverse_lazy('account:user_login'))
+def editMonthlyRecordView(request, member_id, month, slug):
+    society = Society.objects.get(slug=slug)
+    member = Member.objects.get(id=member_id)
+    member_record = MonthlyRecord.objects.get(member=member, month=month)
+    if request.method == 'POST':
+        edit_record_form = EditMonthlyRecordForm(data=request.POST, instance=member_record)
+        if edit_record_form.is_valid():
+            record = edit_record_form.save(commit=False)
+            record.save()
+            return HttpResponseRedirect(reverse('record:all-records', kwargs=('slug:slug')))
+    else:
+        edit_record_form = EditMonthlyRecordForm(instance=member_record)
+    return render(request, 'record/edit_record.html', {'edit_record_form': edit_record_form, 'society': society})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def addSocietyView(request):

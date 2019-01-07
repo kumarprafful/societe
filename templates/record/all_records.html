@@ -28,7 +28,7 @@
         {% for record in records %}
           <tr>
             <td>{{record}}</td>
-            <td>{{record.month}}</td>
+            <td>{{record.get_month_display}}</td>
             <td>{{record.previous_share}}</td>
             <td>{{record.previous_loan}}</td>
             <td>{{record.share}}</td>
@@ -39,7 +39,7 @@
             <td>{{record.late_fees}}</td>
             <td>{{record.total_amount}}</td>
 
-            <td><a class="" href="#">Edit</a></td>
+            <td><a class="" href="{% url 'record:edit-record' slug=society.slug member_id=record.member.id month=record.month %}">Edit</a></td>
 
 
           </tr>

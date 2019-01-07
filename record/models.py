@@ -59,16 +59,33 @@ class Member(models.Model):
         return self.name
 
 class MonthlyRecord(models.Model):
+    MONTH = (
+        ('1','January'),
+        ('2','February'),
+        ('3','March'),
+        ('4','April'),
+        ('5','May'),
+        ('6','June'),
+        ('7','July'),
+        ('8','August'),
+        ('9','September'),
+        ('10','October'),
+        ('11','November'),
+        ('12','December'),
+    )
+
+
     member = models.ForeignKey(Member, related_name='members', on_delete=models.CASCADE)
     member_name = models.CharField(max_length=1025, blank=True, null=True)
     date = models.DateTimeField(default=datetime.now)
-    month = models.IntegerField(blank=True, null=True, default=0)
+    month = models.CharField(choices=MONTH, max_length=20, blank=True, null=True, default=0)
     year = models.IntegerField(blank=True, null=True)
     previous_share = models.IntegerField(blank=True, null=True)
     previous_loan = models.IntegerField(blank=True, null=True)
     share = models.IntegerField(blank=True, null=True)
     total_share = models.IntegerField(blank=True, null=True)
     installment = models.IntegerField(blank=True, null=True)
+    installment_filled = models.BooleanField(default=False)
     balance_loan = models.IntegerField(blank=True, null=True)
     interest = models.IntegerField(blank=True, null=True)
     late_fees = models.IntegerField(default=0, blank=True, null=True)

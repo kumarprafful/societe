@@ -16,7 +16,9 @@ urlpatterns = [
     path('<slug>/record/<month>/json', record_views.monthly_record_ajax, name='monthly-record-ajax'),
     path('<slug>/<id>/<month>/change/', record_views.createMonthlyRecordView, name='change-prev-data'),
     path('<soc_id>/delete-member/<id>/', record_views.delete_member_view, name='delete-member'),
-    path('<slug>/all_record/', record_views.all_record, name='all-records'),
+    path('<slug>/all-record/', record_views.all_record, name='all-records'),
+    path('<slug>/<member_id>/<month>/edit-record/', record_views.editMonthlyRecordView, name='edit-record'),
+
 
 
 
