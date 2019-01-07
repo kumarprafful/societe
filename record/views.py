@@ -116,7 +116,7 @@ def addMemberView(request, slug):
             record_form.month = first_record.fill_month()
             record_form.previous_share = member.starting_share
             record_form.previous_loan = member.starting_loan
-            record_form.share = func.fill_share(200)
+            record_form.share = func.fill_share(0)
             record_form.total_share = func.fill_total_share(member.starting_share, 200)
             record_form.installment = func.fill_installment(0)
             record_form.balance_loan = func.fill_balance_loan(member.starting_loan, 0)
