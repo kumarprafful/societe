@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse, reverse_lazy
@@ -45,6 +44,7 @@ def all_record(request, slug):
 @login_required(login_url=reverse_lazy('account:user_login'))
 def createMonthlyRecordView(request, slug, id, month):
     society = Society.objects.get(slug=slug)
+    society_settings = SocietySetting.objects.get(society=society)
     if request.method=='POST':
         member = Member.objects.get(id=id)
         prevRecord = MonthlyRecord.objects.get(member=member, month=month, member__active=1)
@@ -57,11 +57,11 @@ def createMonthlyRecordView(request, slug, id, month):
             record,year = func.getNextYear(prevRecord.month, prevRecord.year)
             record.previous_share = prevRecord.total_share
             record.previous_loan = prevRecord.balance_loan
-            record.share = func.fill_share(200)
+            record.share = func.fill_share(society_settings.basic_share)
             record.total_share = func.fill_total_share(record.previous_share, record.share)
             record.balance_loan = func.fill_balance_loan(record.previous_loan, int(new_record_form.data['installment']))
             prevRecord.installment_filled = 1
-            record.interest = func.fill_interest(record.previous_loan)
+            record.interest = func.fill_interest(society_settings.interest_rate,record.previous_loan)
             record.total_amount = func.fill_total_amount(record.share, record.installment, record.interest)
             prevRecord.save()
             record.save()
@@ -80,7 +80,7 @@ def editMonthlyRecordView(request, member_id, month, slug):
         if edit_record_form.is_valid():
             record = edit_record_form.save(commit=False)
             record.save()
-            return HttpResponseRedirect(reverse('record:all-records', kwargs=('slug:slug')))
+            return HttpResponseRedirect(reverse('record:all-records', kwargs={'slug':slug}))
     else:
         edit_record_form = EditMonthlyRecordForm(instance=member_record)
     return render(request, 'record/edit_record.html', {'edit_record_form': edit_record_form, 'society': society})
@@ -104,7 +104,7 @@ def addSocietyView(request):
 def society_settings(request, slug):
     settings = SocietySetting.objects.get(society__slug=slug)
     if request.method == 'POST':
-        settings_form = SocietySettingForm(data=request.Data, instance=settings)
+        settings_form = SocietySettingForm(data=request.POST, instance=settings)
         if settings_form.is_valid():
             settings_form.save()
             return HttpResponseRedirect(reverse('record:dashboard'))
@@ -115,6 +115,7 @@ def society_settings(request, slug):
 @login_required(login_url=reverse_lazy('account:user_login'))
 def addMemberView(request, slug):
     society = Society.objects.get(slug=slug)
+    society_settings = SocietySetting.objects.get(society=society)
     if request.method == 'POST':
         member_form = MemberForm(data=request.POST)
         record_form = MonthlyRecordForm()
@@ -134,11 +135,11 @@ def addMemberView(request, slug):
             record_form.month = first_record.fill_month()
             record_form.previous_share = member.starting_share
             record_form.previous_loan = member.starting_loan
-            record_form.share = func.fill_share(0)
-            record_form.total_share = func.fill_total_share(member.starting_share, 200)
+            record_form.share = func.fill_share(society_settings.basic_share)
+            record_form.total_share = func.fill_total_share(member.starting_share, society_settings.basic_share)
             record_form.installment = func.fill_installment(0)
             record_form.balance_loan = func.fill_balance_loan(member.starting_loan, 0)
-            record_form.interest = func.fill_interest(member.starting_loan)
+            record_form.interest = func.fill_interest(society_settings.interest_rate, member.starting_loan)
             record_form.total_amount = func.fill_total_amount(record_form.share, record_form.installment, record_form.interest)
             record_form.save()
 

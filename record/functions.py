@@ -31,8 +31,8 @@ def fill_balance_loan(previous_loan, installment):
     balance_loan = previous_loan - installment
     return balance_loan
 
-def fill_interest(previous_loan):
-    interest = 0.01 * previous_loan
+def fill_interest(interest_rate,previous_loan):
+    interest = interest_rate * previous_loan
     return interest
 
 def fill_total_amount(share, installment, interest):
