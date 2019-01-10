@@ -24,14 +24,14 @@ def society_dash(request, slug):
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def monthly_record(request, slug):
-    society = Society.objects.get(slug=slug);
+    society = Society.objects.get(slug=slug)
     monthly_records = MonthlyRecord.objects.filter(member__society=society, installment_filled=False, member__active=1)
     return render(request, 'record/monthly_record.html', {'society': society,'monthly_records': monthly_records})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def monthly_record_ajax(request, slug, month=datetime.now().month):
     society = Society.objects.get(slug=slug);
-    monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month, member__active=1).values('balance_loan', 'date', 'id', 'installment', 'interest', 'late_fees', 'member','member_name', 'member_id', 'month', 'previous_loan', 'previous_share', 'remarks', 'share', 'total_amount', 'total_share', 'year')
+    monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month, installment_filled=False, member__active=1).values('balance_loan', 'date', 'id', 'installment', 'interest', 'late_fees', 'member','member_name', 'member_id', 'month', 'previous_loan', 'previous_share', 'remarks', 'share', 'total_amount', 'total_share', 'year')
 
     return JsonResponse({'monthly_records': list(monthly_records)}, content_type="application/json")
 
