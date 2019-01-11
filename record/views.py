@@ -79,7 +79,9 @@ def editMonthlyRecordView(request, member_id, month, slug):
         edit_record_form = EditMonthlyRecordForm(data=request.POST, instance=member_record)
         if edit_record_form.is_valid():
             record = edit_record_form.save(commit=False)
+            member.name = record.member_name
             record.save()
+            member.save()
             return HttpResponseRedirect(reverse('record:all-records', kwargs={'slug':slug}))
     else:
         edit_record_form = EditMonthlyRecordForm(instance=member_record)
