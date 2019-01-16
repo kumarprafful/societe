@@ -7,7 +7,7 @@ def getNextMonth(curMonth):
             nxtMonth=1
     return str(nxtMonth)
 
-def gegtNextYear(curMonth, curYear):
+def getNextYear(curMonth, curYear):
     curMonth = int(curMonth)
     if(curMonth>0 and curMonth<13):
         if(curMonth>=1 and curMonth < 12):

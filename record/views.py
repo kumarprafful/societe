@@ -54,7 +54,7 @@ def createMonthlyRecordView(request, slug, id, month):
             record.member = member
             record.member_name = member.name
             record.month = func.getNextMonth(prevRecord.month)
-            record,year = func.getNextYear(prevRecord.month, prevRecord.year)
+            record.year = func.getNextYear(prevRecord.month, prevRecord.year)
             record.previous_share = prevRecord.total_share
             record.previous_loan = prevRecord.balance_loan
             record.share = func.fill_share(society_settings.basic_share)
