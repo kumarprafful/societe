@@ -4,7 +4,14 @@
 {% include './cust_nav.html' %}
 
   <input type="number" onChange="handleSubmit(event)" min="2017" max="2030">
-
+  {% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      {{ message }}
+    </div>
+  {% endfor %}
 <ul class="collapsible popout" id="app">
 {% for year, value in analytics.items %}
 

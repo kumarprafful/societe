@@ -105,8 +105,13 @@ def getMonthlyRecordSum(request, slug, year=datetime.now().year):
 
     # for year in years:
     analytics[year] = {}
+    yo = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year)
+    if not yo:
+        print("NOT")
+        messages.error(request, 'Not Found')
+        return HttpResponseRedirect(reverse('record:analytics', kwargs={'slug':slug}))
     y = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
-    print(y)
+    # print(y)
     # if y['total_shares'] is None:
     #     messages.error(request, 'Not Found')
     #     return HttpResponseRedirect(reverse('record:analytics', kwargs={'slug':slug}))
@@ -122,6 +127,7 @@ def getMonthlyRecordSumAjax(request, slug, year):
     analytics = {}
     months = ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
     analytics[year] = {}
+
     y = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
     analytics[year]['total'] = y
     for numMonth,month in enumerate(months):
