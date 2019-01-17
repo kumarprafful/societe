@@ -19,6 +19,8 @@ urlpatterns = [
     path('<slug>/all-record/', record_views.all_record, name='all-records'),
     path('<slug>/<member_id>/<month>/edit-record/', record_views.editMonthlyRecordView, name='edit-record'),
     path('<slug>/analytics/', record_views.getMonthlyRecordSum, name='analytics'),
+    path('<slug>/analytics/<year>', record_views.getMonthlyRecordSum, name='analytics'),
+
 
 
 

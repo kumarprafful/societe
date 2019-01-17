@@ -80,6 +80,7 @@ $(document).ready(function(){
       type: "GET",
       url: "{% url 'record:monthly-record-ajax' society.slug 0 %}".replace("0", month),
       success: function(result) {
+        console.log(result);
         data = result.monthly_records;
         $('#table tbody tr').remove();
         for(i=0; i<data.length; i++){

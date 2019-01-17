@@ -1,8 +1,11 @@
+import json
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+from django.contrib import messages
 
 from record.models import Society, Member, MonthlyRecord, SocietySetting
 from record.forms import SocietyForm, MemberForm, NewMonthlyRecordForm, MonthlyRecordForm, SocietySettingForm, EditMonthlyRecordForm
@@ -36,7 +39,6 @@ def monthly_record(request, slug):
 def monthly_record_ajax(request, slug, month=datetime.now().month):
     society = Society.objects.get(slug=slug);
     monthly_records = MonthlyRecord.objects.filter(member__society=society, month=month, installment_filled=False, member__active=1).values('balance_loan', 'date', 'id', 'installment', 'interest', 'late_fees', 'member','member_name', 'member_id', 'month', 'previous_loan', 'previous_share', 'remarks', 'share', 'total_amount', 'total_share', 'year')
-
     return JsonResponse({'monthly_records': list(monthly_records)}, content_type="application/json")
 
 @login_required(login_url=reverse_lazy('account:user_login'))
@@ -91,25 +93,43 @@ def editMonthlyRecordView(request, member_id, month, slug):
         edit_record_form = EditMonthlyRecordForm(instance=member_record)
     return render(request, 'record/edit_record.html', {'edit_record_form': edit_record_form, 'society': society})
 
-def getMonthlyRecordSum(request, slug):
+def getMonthlyRecordSum(request, slug, year=datetime.now().year):
     society = Society.objects.get(slug=slug)
     records = MonthlyRecord.objects.filter(member__society=society, member__active=1).aggregate(total_shares=Sum('share'))
     analytics = {}
     months = ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
-    curYear = datetime.now().year
-    if curYear not in years:
-        years.append(curYear)
-        print(years)
+    # curYear = datetime.now().year
+    # if curYear not in years:
+    #     years.append(curYear)
+    #     print(years)
 
-    for year in years:
-        analytics[year] = {}
-        y = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
-        analytics[year]['total'] = y
-        for numMonth,month in enumerate(months):
-            r = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year, month=numMonth+1).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
-            analytics[year][month] = {}
-            analytics[year][month] = r
+    # for year in years:
+    analytics[year] = {}
+    y = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
+    print(y)
+    # if y['total_shares'] is None:
+    #     messages.error(request, 'Not Found')
+    #     return HttpResponseRedirect(reverse('record:analytics', kwargs={'slug':slug}))
+    analytics[year]['total'] = y
+    for numMonth,month in enumerate(months):
+        r = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year, month=numMonth+1).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
+        analytics[year][month] = r
     return render(request, 'record/analytics.html', {'society':society,'records':records, 'analytics':analytics})
+
+def getMonthlyRecordSumAjax(request, slug, year):
+    society = Society.objects.get(slug=slug)
+    records = MonthlyRecord.objects.filter(member__society=society, member__active=1).aggregate(total_shares=Sum('share'))
+    analytics = {}
+    months = ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
+    analytics[year] = {}
+    y = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
+    analytics[year]['total'] = y
+    for numMonth,month in enumerate(months):
+        r = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year, month=numMonth+1).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
+        analytics[year][month] = r
+    # analytics =json.dumps(analytics)
+    return JsonResponse({'analytics':(analytics)}, content_type="application/json")
+
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def addSocietyView(request):

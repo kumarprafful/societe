@@ -2,9 +2,13 @@
 
 {% block body %}
 {% include './cust_nav.html' %}
-<ul class="collapsible popout">
+
+  <input type="number" onChange="handleSubmit(event)" min="2017" max="2030">
+
+<ul class="collapsible popout" id="app">
 {% for year, value in analytics.items %}
-    <li class="">
+
+    <li class="" id="here" >
       <div class="collapsible-header"><i class="material-icons">arrow_drop_down_circle</i>{{year}}</div>
       <div class="collapsible-body">
         <div class="">
@@ -47,4 +51,23 @@
   });
   </script>
 
+<script type="text/javascript">
+  handleSubmit = (event) => {
+   // event.preventDefault();
+   console.log(event.target.value);
+   var year = event.target.value;
+   $.ajax({
+     type: "GET",
+     url: "{% url 'record:analytics' society.slug 0 %}".replace("0", year),
+     success: function(result){
+       // console.log(result);
+       // var herre = $($.parseHTML(result)).filter("#here");
+       console.log("<li>"+$(result).find("#here").html()+"</li>");
+
+       $("#app").append("<li>"+$(result).find("#here").html()+"</li>");
+     }
+   })
+ }
+
+</script>
 {% endblock %}
