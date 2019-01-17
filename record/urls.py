@@ -18,6 +18,8 @@ urlpatterns = [
     path('<soc_id>/delete-member/<id>/', record_views.delete_member_view, name='delete-member'),
     path('<slug>/all-record/', record_views.all_record, name='all-records'),
     path('<slug>/<member_id>/<month>/edit-record/', record_views.editMonthlyRecordView, name='edit-record'),
+    path('<slug>/analytics/', record_views.getMonthlyRecordSum, name='analytics'),
+
 
 
 

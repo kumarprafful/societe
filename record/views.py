@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 
 from record.models import Society, Member, MonthlyRecord, SocietySetting
 from record.forms import SocietyForm, MemberForm, NewMonthlyRecordForm, MonthlyRecordForm, SocietySettingForm, EditMonthlyRecordForm
@@ -9,6 +10,9 @@ from record.forms import SocietyForm, MemberForm, NewMonthlyRecordForm, MonthlyR
 from record import functions as func
 
 from datetime import datetime
+
+years = []
+
 # Create your views here.
 
 @login_required(login_url=reverse_lazy('account:user_login'))
@@ -86,6 +90,26 @@ def editMonthlyRecordView(request, member_id, month, slug):
     else:
         edit_record_form = EditMonthlyRecordForm(instance=member_record)
     return render(request, 'record/edit_record.html', {'edit_record_form': edit_record_form, 'society': society})
+
+def getMonthlyRecordSum(request, slug):
+    society = Society.objects.get(slug=slug)
+    records = MonthlyRecord.objects.filter(member__society=society, member__active=1).aggregate(total_shares=Sum('share'))
+    analytics = {}
+    months = ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
+    curYear = datetime.now().year
+    if curYear not in years:
+        years.append(curYear)
+        print(years)
+
+    for year in years:
+        analytics[year] = {}
+        y = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
+        analytics[year]['total'] = y
+        for numMonth,month in enumerate(months):
+            r = MonthlyRecord.objects.filter(member__society=society, member__active=1, year=year, month=numMonth+1).aggregate(total_shares=Sum('total_share'), total_installments=Sum('installment'), total_interest=Sum('interest'))
+            analytics[year][month] = {}
+            analytics[year][month] = r
+    return render(request, 'record/analytics.html', {'society':society,'records':records, 'analytics':analytics})
 
 @login_required(login_url=reverse_lazy('account:user_login'))
 def addSocietyView(request):

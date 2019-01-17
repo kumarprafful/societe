@@ -1,0 +1,50 @@
+{% extends '../generics/base.html' %}
+
+{% block body %}
+{% include './cust_nav.html' %}
+<ul class="collapsible popout">
+{% for year, value in analytics.items %}
+    <li class="">
+      <div class="collapsible-header"><i class="material-icons">arrow_drop_down_circle</i>{{year}}</div>
+      <div class="collapsible-body">
+        <div class="">
+          <table>
+            <thead>
+              <tr>
+                <th>Index</th>
+                <th>Total Share</th>
+                <th>Installment</th>
+                <th>Interest</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for t,v in value.items %}
+              <tr>
+                <td>{{t}}</td>
+                {% for t1, v1 in v.items %}
+                <td>{{v1}}</td>
+                {% endfor %}
+
+              </tr>
+            </tbody>
+            {% endfor %}
+
+          </table>
+        </div>
+
+
+      </div>
+    </li>
+
+{% endfor %}
+</ul>
+
+
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('.collapsible').collapsible();
+  });
+  </script>
+
+{% endblock %}
