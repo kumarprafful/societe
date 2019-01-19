@@ -14,6 +14,8 @@
       <th>Name</th>
       <th>Starting share</th>
       <th>Starting loan</th>
+      <th>Mobile</th>
+      <th>Address</th>
       <th>Delete</th>
 
     </tr>
@@ -24,6 +26,8 @@
       <td>{{member.name}}</td>
       <td>{{member.starting_share}}</td>
       <td>{{member.starting_loan}}</td>
+      <td>{{member.mobile_no}}</td>
+      <td>{{member.address}}</td>
       <td><a href="{% url 'record:delete-member' soc_id=member.society.id id=member.id %}" class="btn">Delete</a> </td>
 
     </tr>

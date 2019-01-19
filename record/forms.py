@@ -9,7 +9,7 @@ class SocietyForm(forms.ModelForm):
 class MemberForm(forms.ModelForm):
     class Meta:
         model = Member
-        fields = ['name', 'starting_share', 'starting_loan']
+        fields = ['name', 'starting_share', 'starting_loan', 'mobile_no', 'address']
         widget=forms.TextInput(attrs={'class': "input-field"})
 
 

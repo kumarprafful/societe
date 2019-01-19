@@ -46,6 +46,8 @@ class Member(models.Model):
     name = models.CharField(max_length=1024)
     starting_share = models.IntegerField(blank=False, null=False)
     starting_loan = models.IntegerField(blank=False, null=False)
+    mobile_no = models.IntegerField(blank=False, null=False, default=0)
+    address = models.CharField(max_length=1024, blank=False, null=False, default="new delhi")
     date_of_creation = models.DateTimeField(default=datetime.now)
     month_of_creation = models.IntegerField(default=0)
     active = models.BooleanField(default=1)
